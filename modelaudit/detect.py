@@ -198,6 +198,9 @@ def scan(root, use_network=True, max_depth=6):
                     "name": slug or os.path.basename(dirpath),
                     "license": lic or "unknown",
                     "source": src or (lf or ""),
+                    # Copyleft asks you to publish. If this checkout is a public repo,
+                    # you already are, and the finding should say so instead of shouting.
+                    "published": _is_public(slug) if (slug and use_network) else False,
                 })
             dirnames[:] = [d for d in dirnames if d != ".git"]
             continue
@@ -244,4 +247,22 @@ def _gh_license(slug, timeout=12):
     except (urllib.error.URLError, json.JSONDecodeError, TimeoutError, OSError):
         out = (None, None)
     _GH_CACHE[slug] = out
+    return out
+
+
+_PUBLIC_CACHE = {}
+
+
+def _is_public(slug):
+    """Is this GitHub repo publicly readable? Used to soften copyleft findings."""
+    if slug in _PUBLIC_CACHE:
+        return _PUBLIC_CACHE[slug]
+    req = urllib.request.Request(f"https://api.github.com/repos/{slug}",
+                                 headers={"User-Agent": UA})
+    try:
+        with urllib.request.urlopen(req, timeout=10) as r:
+            out = not json.load(r).get("private", True)
+    except (urllib.error.URLError, json.JSONDecodeError, TimeoutError, OSError):
+        out = False
+    _PUBLIC_CACHE[slug] = out
     return out

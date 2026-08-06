@@ -68,10 +68,25 @@ NEEDS_READING = {
 }
 
 
-def classify(license_id: str, ship_mode: str, kind: str):
-    """Return (severity, headline, detail) for one dependency."""
+def classify(license_id: str, ship_mode: str, kind: str, published: bool = False):
+    """Return (severity, headline, detail) for one dependency.
+
+    `published` means the source of the thing using this is already public. Copyleft
+    asks you to publish your source; if you have, you are doing the substance of what
+    it wants, and shouting BLOCKER at you is just wrong. It becomes a smaller question
+    about which license label you put on it.
+    """
     lid = (license_id or "unknown").strip()
     norm = lid.upper().replace("_", "-")
+
+    if published and (norm in {x.upper() for x in STRONG_NETWORK_COPYLEFT | STRONG_COPYLEFT}):
+        return ("obligation",
+                "Copyleft, and your source is already public — check the label matches",
+                "You're publishing, which is the substance of what copyleft asks for. What's "
+                "left is whether your license label matches upstream's. AGPL-3.0 and GPL-3.0 "
+                "are not the same license, so an AGPL dependency needs AGPL terms, not GPL. "
+                "And if you offer a commercial or dual license, that normally requires owning "
+                "all the copyright — which you don't, for code you didn't write.")
 
     if norm in {x.upper() for x in STRONG_NETWORK_COPYLEFT}:
         if ship_mode == "service":

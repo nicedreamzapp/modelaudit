@@ -54,7 +54,8 @@ def main(argv=None):
 
     rows = []
     for f in found:
-        sev, headline, detail = classify(f["license"], a.ship, f["kind"])
+        sev, headline, detail = classify(f["license"], a.ship, f["kind"],
+                                         published=f.get("published", False))
         rows.append({**f, "severity": sev, "headline": headline, "detail": detail})
     rows.sort(key=lambda r: (SEVERITY_ORDER.get(r["severity"], 9), r["name"]))
 
