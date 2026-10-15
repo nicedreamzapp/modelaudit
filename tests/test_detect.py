@@ -263,7 +263,7 @@ def test_hf_license_without_card_data(fake_api):
     urllib.error.HTTPError(HF + "o/m", 404, "Not Found", {}, None),
     TimeoutError(),
     OSError("reset"),
-])
+], ids=["url-error", "http-404", "timeout", "os-error"])
 def test_hf_license_network_failure(fake_api, err):
     fake_api({HF + "o/m": err})
     assert detect.hf_license("o/m") == (None, None)
