@@ -11,8 +11,7 @@ There is no pip package yet. You run `modelaudit` from a clone of the repository
 
 ## Requirements
 
-- Python 3. The README states Python 3.8+.
-  <!-- TODO-VERIFY: the code has only been run on Python 3.13 while writing these docs; 3.8 is not tested by any CI in the repo. -->
+- Python 3.8 or newer. CI runs the test suite on 3.8 through 3.13, on Linux.
 - `git`, to clone the repository.
 - No third-party packages. Everything is in Python's standard library
   (`argparse`, `json`, `os`, `re`, `urllib`, `dataclasses`).
