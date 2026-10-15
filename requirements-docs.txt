@@ -1,0 +1,4 @@
+# Pinned versions used to build the documentation site (mkdocs build --strict).
+# The [imaging] extra pulls in Pillow and CairoSVG for the social cards plugin.
+mkdocs==1.6.1
+mkdocs-material[imaging]==9.7.7
