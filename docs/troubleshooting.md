@@ -95,8 +95,7 @@ at that folder.
 
 ## A license is identified wrongly
 
-License text is matched with simple substring signatures, checked in a fixed
-order. Running the matcher over the license texts that ship with Debian in
+License text is matched with simple substring signatures. Running the matcher over the license texts that ship with Debian in
 `/usr/share/common-licenses` gave these results:
 
 | File | Identified as |
@@ -106,26 +105,21 @@ order. Running the matcher over the license texts that ship with Debian in
 | `GPL-2` | `GPL-2.0` |
 | `GPL-3` | `GPL-3.0` |
 | `LGPL-3` | `LGPL-3.0` |
-| `LGPL-2`, `LGPL-2.1` | `GPL-2.0` (wrong) |
-| `MPL-2.0` | `GPL-3.0` (wrong) |
+| `LGPL-2.1` | `LGPL-2.1` |
+| `MPL-2.0` | `MPL-2.0` |
+| `LGPL-2` | `GPL-2.0` (wrong) |
 | `GFDL-1.2`, `GFDL-1.3` | `non-commercial (custom)` (wrong) |
 | `GPL-1` | `non-commercial (custom)` (wrong) |
 | `CC0-1.0`, `Artistic`, `MPL-1.1` | not recognized |
 
-The wrong results come from the order of checks: LGPL-2.1 and MPL-2.0 texts
-mention the GNU GPL by name, and the GFDL and GPL-1 texts contain the word
-"noncommercially", which triggers the non-commercial fallback. The `license from:`
+`LGPL-2` is the older GNU *Library* General Public License, which has no
+signature of its own, so the GPL-2.0 one matches. The GFDL and GPL-1 texts
+contain the word "noncommercially", which triggers the non-commercial fallback. The `license from:`
 line tells you which file was read, so check it by hand.
 <!-- TODO-VERIFY: results above are from Debian's copies of these texts; other copies with different line wrapping may match differently. -->
 
 If the file is not recognized at all and the network is allowed, the GitHub or
 Hugging Face license is used instead.
-
-## `ATTRIBUTIONname` with no space
-
-In the terminal report the severity is padded to 11 characters, and `ATTRIBUTION`
-is exactly 11, so it runs into the name (for example `· ATTRIBUTIONmit`). It is a
-display quirk only; JSON output is unaffected.
 
 ## Colors in logs / garbage escape codes
 
