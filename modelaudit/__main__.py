@@ -79,7 +79,7 @@ def main(argv=None):
             continue
         shown += 1
         col = C[r["severity"]]
-        print(f"{col}{MARK[r['severity']]} {r['severity'].upper():<11}{C['off']}"
+        print(f"{col}{MARK[r['severity']]} {r['severity'].upper():<10} {C['off']}"
               f"{C['bold']}{r['name']}{C['off']}  {C['dim']}({r['license']}, {r['kind']}){C['off']}")
         print(f"  {r['headline']}")
         for line in _wrap(r["detail"], 76):

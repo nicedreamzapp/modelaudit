@@ -99,6 +99,13 @@ def test_text_report_all_shows_clean_results(stack, capsys):
     assert "o/lib" in out and "o/tool" in out
 
 
+def test_severity_label_is_separated_from_name(stack, capsys):
+    main([stack, "--offline", "--all"])
+    out = capsys.readouterr().out
+    assert "✗ BLOCKER    o/engine" in out          # same spacing as the README sample
+    assert "· ATTRIBUTION o/lib" in out           # 11 letters used to run into the name
+
+
 def test_text_report_shows_license_source(stack, capsys):
     main([stack, "--offline"])
     assert "↳ license from: " in capsys.readouterr().out
