@@ -18,7 +18,9 @@ from modelaudit.detect import (
 @pytest.mark.parametrize("fixture, expected", [
     ("GPL-2", "GPL-2.0"),
     ("GPL-3", "GPL-3.0"),
+    ("LGPL-2.1", "LGPL-2.1"),
     ("LGPL-3", "LGPL-3.0"),
+    ("MPL-2.0", "MPL-2.0"),
     ("Apache-2.0", "Apache-2.0"),
 ])
 def test_real_license_texts(fixture, expected):
@@ -61,6 +63,14 @@ modification, are permitted provided that the following conditions are met:
 ])
 def test_license_signatures(text, expected):
     assert license_from_text(text) == expected
+
+
+def test_gpl3_mentioning_agpl_is_still_gpl3():
+    # GPL-3.0 section 13 is titled "Use with the GNU Affero General Public License".
+    # Here it falls inside the part of the file that gets read.
+    text = license_text("GPL-3")
+    i = text.index("  13. Use with the GNU Affero")
+    assert license_from_text(text[:3000] + text[i:]) == "GPL-3.0"
 
 
 def test_matching_is_case_insensitive():

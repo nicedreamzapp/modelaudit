@@ -48,10 +48,19 @@ def license_from_text(text):
     """Identify a license from its actual text."""
     if not text:
         return None
-    head = text[:20000]
+    head = text[:20000].lower()
+    # License texts name each other: LGPL-2.1 builds on "the GNU General Public
+    # License", MPL-2.0 lists the GPL family as secondary licenses. So the first match
+    # in list order is not enough. Of the signatures that match, take the one whose
+    # name shows up earliest, which is the license's own title.
+    best = None
     for lid, needles in LICENSE_SIGNATURES:
-        if all(n.lower() in head.lower() for n in needles):
-            return lid
+        if all(n.lower() in head for n in needles):
+            pos = head.find(needles[0].lower())
+            if best is None or pos < best[0]:
+                best = (pos, lid)
+    if best:
+        return best[1]
     if re.search(r"non-?commercial", head, re.I):
         return "non-commercial (custom)"
     return None
