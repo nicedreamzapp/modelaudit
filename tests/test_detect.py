@@ -139,6 +139,11 @@ def test_read_tolerates_bad_utf8_and_limits(tmp_path):
     ("git@github.com:ml-explore/mlx-lm.git", "ml-explore/mlx-lm"),
     ("ssh://git@github.com/Blaizzy/mlx-vlm", "Blaizzy/mlx-vlm"),
     ("https://user:token@github.com/org/repo.git", "org/repo"),
+    ("https://github.com/org/repo/", "org/repo"),
+    # Repo names may contain dots.
+    ("https://github.com/vercel/next.js", "vercel/next.js"),
+    ("https://github.com/socketio/socket.io.git", "socketio/socket.io"),
+    ("git@github.com:black-forest-labs/flux.1.git", "black-forest-labs/flux.1"),
 ])
 def test_github_slug(url, slug):
     assert github_slug(url) == slug

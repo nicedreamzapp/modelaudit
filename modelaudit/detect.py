@@ -99,7 +99,7 @@ def git_remote(repo_dir):
 def github_slug(url):
     if not url:
         return None
-    m = re.search(r"github\.com[:/]+([^/]+)/([^/\s.]+)", url)
+    m = re.search(r"github\.com[:/]+([^/\s]+)/([^/\s]+?)(?:\.git)?/?$", url)
     return f"{m.group(1)}/{m.group(2)}" if m else None
 
 
