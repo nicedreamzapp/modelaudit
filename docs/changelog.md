@@ -10,6 +10,18 @@ description: >-
 There are no tagged releases or version numbers yet. This list is built from the
 git history of the `main` branch.
 
+## Unreleased
+
+- Test suite (`pytest`, offline, no GPU) and a CI workflow running it on Python
+  3.8 to 3.13.
+- LGPL-2.1 and MPL-2.0 license files are no longer read as GPL-2.0 and GPL-3.0.
+- GitHub repo names containing dots (like `vercel/next.js`) are no longer cut
+  short at the first dot.
+- Folders holding Core ML `.mlpackage` or `.mlmodelc` bundles are reported as the
+  model, instead of a folder named `weights` deep inside the bundle.
+- The `ATTRIBUTION` label no longer runs into the dependency name in the terminal
+  report.
+
 ## 2026-09-27
 
 - README rewritten: plain summary, quick start, a "What I built" section and a

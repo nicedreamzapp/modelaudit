@@ -48,10 +48,19 @@ def license_from_text(text):
     """Identify a license from its actual text."""
     if not text:
         return None
-    head = text[:20000]
+    head = text[:20000].lower()
+    # License texts name each other: LGPL-2.1 builds on "the GNU General Public
+    # License", MPL-2.0 lists the GPL family as secondary licenses. So the first match
+    # in list order is not enough. Of the signatures that match, take the one whose
+    # name shows up earliest, which is the license's own title.
+    best = None
     for lid, needles in LICENSE_SIGNATURES:
-        if all(n.lower() in head.lower() for n in needles):
-            return lid
+        if all(n.lower() in head for n in needles):
+            pos = head.find(needles[0].lower())
+            if best is None or pos < best[0]:
+                best = (pos, lid)
+    if best:
+        return best[1]
     if re.search(r"non-?commercial", head, re.I):
         return "non-commercial (custom)"
     return None
@@ -90,7 +99,7 @@ def git_remote(repo_dir):
 def github_slug(url):
     if not url:
         return None
-    m = re.search(r"github\.com[:/]+([^/]+)/([^/\s.]+)", url)
+    m = re.search(r"github\.com[:/]+([^/\s]+)/([^/\s]+?)(?:\.git)?/?$", url)
     return f"{m.group(1)}/{m.group(2)}" if m else None
 
 
@@ -141,6 +150,9 @@ def hf_license(repo_id, timeout=12):
 
 WEIGHT_SUFFIXES = (".safetensors", ".gguf", ".bin", ".mlmodelc", ".mlpackage",
                    ".onnx", ".pt", ".pth", ".tflite", ".ckpt")
+
+
+COREML_BUNDLES = (".mlmodelc", ".mlpackage")
 
 
 # A Hugging Face cache entry always looks like  models--org--name/snapshots/<hash>.
@@ -206,7 +218,10 @@ def scan(root, use_network=True, max_depth=6):
             continue
 
         # --- a downloaded model
-        if is_hf_snapshot(dirpath) or looks_like_model_dir(names):
+        # Core ML models (.mlpackage, .mlmodelc) are directories, not files, so they
+        # have to be looked for among the subfolders.
+        bundles = {d for d in dirnames if d.endswith(COREML_BUNDLES)}
+        if is_hf_snapshot(dirpath) or looks_like_model_dir(names | bundles):
             rid = hf_repo_id(dirpath)
             lic, src = (None, None)
             lf = find_license_file(dirpath)

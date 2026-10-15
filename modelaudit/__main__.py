@@ -79,7 +79,7 @@ def main(argv=None):
             continue
         shown += 1
         col = C[r["severity"]]
-        print(f"{col}{MARK[r['severity']]} {r['severity'].upper():<11}{C['off']}"
+        print(f"{col}{MARK[r['severity']]} {r['severity'].upper():<10} {C['off']}"
               f"{C['bold']}{r['name']}{C['off']}  {C['dim']}({r['license']}, {r['kind']}){C['off']}")
         print(f"  {r['headline']}")
         for line in _wrap(r["detail"], 76):
@@ -109,7 +109,7 @@ def main(argv=None):
 def _wrap(text, width):
     out, line = [], ""
     for word in text.split():
-        if len(line) + len(word) + 1 > width:
+        if line and len(line) + len(word) + 1 > width:
             out.append(line)
             line = word
         else:

@@ -1,5 +1,7 @@
 # modelaudit
 
+[![ci](https://github.com/nicedreamzapp/modelaudit/actions/workflows/ci.yml/badge.svg)](https://github.com/nicedreamzapp/modelaudit/actions/workflows/ci.yml)
+
 **Find the license landmines in a local AI stack — including the ones in the model weights.**
 
 `modelaudit` is a command-line tool that walks a folder, finds the code checkouts and
@@ -118,6 +120,16 @@ Upstream, not mine: the [GitHub REST API](https://docs.github.com/en/rest) and t
 [Hugging Face Hub API](https://huggingface.co/docs/hub/api) for license lookups,
 [SPDX](https://spdx.org/licenses/) license identifiers, and Python's standard library.
 See [CREDITS.md](CREDITS.md).
+
+## Tests
+
+```
+pip install -r requirements-dev.txt
+python3 -m pytest
+```
+
+The suite runs offline. Network lookups are mocked, and any test that tries to reach
+GitHub or Hugging Face for real fails. CI runs it on Python 3.8 to 3.13.
 
 ## Known limits
 

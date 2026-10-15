@@ -64,8 +64,8 @@ Not yet. Clone the repo and run `python3 -m modelaudit`. See [Install](install.m
 
 ## Which Python versions work?
 
-The README says 3.8+, and it has no third-party dependencies.
-<!-- TODO-VERIFY: only tested on Python 3.13 while writing these docs. -->
+3.8 and newer. CI runs the test suite on 3.8, 3.9, 3.10, 3.11, 3.12 and 3.13 on
+Ubuntu. It has no third-party dependencies.
 
 ## Does it work on Windows?
 

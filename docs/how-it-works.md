@@ -66,7 +66,8 @@ A folder is treated as a model when any of these is true:
 - its path ends in a Hugging Face cache snapshot,
   `models--<org>--<name>/snapshots/<hex hash>`;
 - it holds a file ending in `.safetensors`, `.gguf`, `.bin`, `.mlmodelc`,
-  `.mlpackage`, `.onnx`, `.pt`, `.pth`, `.tflite` or `.ckpt`;
+  `.mlpackage`, `.onnx`, `.pt`, `.pth`, `.tflite` or `.ckpt`, or a Core ML
+  bundle folder ending in `.mlpackage` or `.mlmodelc`;
 - it holds `model_index.json` (diffusers models such as FLUX and Stable Diffusion
   keep their weights in subfolders);
 - it holds `config.json` and any file whose name starts with `model`.
@@ -91,8 +92,11 @@ License resolution:
 ## License matching
 
 `license_from_text()` reads the first 20,000 characters and checks these
-signatures in order, case-insensitively. The first one where every string is
-present wins:
+signatures case-insensitively. A signature matches when every string is present.
+License texts name each other (LGPL-2.1 builds on "the GNU General Public
+License", MPL-2.0 lists the GPL family as secondary licenses), so when several
+match, the one whose first string appears earliest in the text wins. That is
+normally the license's own title. Ties go to the earlier row:
 
 | Result | Must contain |
 |---|---|
@@ -115,7 +119,7 @@ present wins:
 If nothing matches but the text contains "non-commercial" or "noncommercial", the
 result is `non-commercial (custom)`, which is a blocker.
 
-Because the order matters, some texts can be misread. See
+Substring matching can still misread some texts. See
 [Troubleshooting](troubleshooting.md#a-license-is-identified-wrongly).
 
 ## Severity rules
