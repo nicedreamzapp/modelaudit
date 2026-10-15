@@ -110,6 +110,24 @@ def test_diffusers_model_is_one_finding(tmp_path):
     assert [r["name"] for r in found] == ["flux"]
 
 
+def test_coreml_bundles_are_found_at_the_model_folder(tmp_path):
+    # .mlpackage and .mlmodelc are directories. Without looking at subfolder names,
+    # an .mlpackage was reported as a model called "weights", three levels inside it.
+    make_tree(tmp_path, {
+        "coreml/LICENSE": license_text("Apache-2.0"),
+        "coreml/Foo.mlpackage/Manifest.json": "{}",
+        "coreml/Foo.mlpackage/Data/com.apple.CoreML/model.mlmodel": "",
+        "coreml/Foo.mlpackage/Data/com.apple.CoreML/weights/weight.bin": "",
+        "coreml/Bar.mlmodelc/coremldata.bin": "",
+        "coreml/Bar.mlmodelc/weights/weight.bin": "",
+    })
+    (r,) = scan(str(tmp_path), use_network=False)
+    assert r["kind"] == "weights"
+    assert r["name"] == "coreml"
+    assert r["path"] == str(tmp_path / "coreml")
+    assert r["license"] == "Apache-2.0"
+
+
 def test_hf_cache_snapshot(tmp_path):
     snap = "models--black-forest-labs--FLUX.1-dev/snapshots/3de623fc3c33e44ffbe2bad470d0f45bccf2eb21"
     make_tree(tmp_path, {

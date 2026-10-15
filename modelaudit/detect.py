@@ -152,6 +152,9 @@ WEIGHT_SUFFIXES = (".safetensors", ".gguf", ".bin", ".mlmodelc", ".mlpackage",
                    ".onnx", ".pt", ".pth", ".tflite", ".ckpt")
 
 
+COREML_BUNDLES = (".mlmodelc", ".mlpackage")
+
+
 # A Hugging Face cache entry always looks like  models--org--name/snapshots/<hash>.
 # Matching on that is exact, and it stops multi-component models from being reported
 # as a pile of separate findings.
@@ -215,7 +218,10 @@ def scan(root, use_network=True, max_depth=6):
             continue
 
         # --- a downloaded model
-        if is_hf_snapshot(dirpath) or looks_like_model_dir(names):
+        # Core ML models (.mlpackage, .mlmodelc) are directories, not files, so they
+        # have to be looked for among the subfolders.
+        bundles = {d for d in dirnames if d.endswith(COREML_BUNDLES)}
+        if is_hf_snapshot(dirpath) or looks_like_model_dir(names | bundles):
             rid = hf_repo_id(dirpath)
             lic, src = (None, None)
             lf = find_license_file(dirpath)
