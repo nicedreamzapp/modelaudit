@@ -180,3 +180,8 @@ def test_wrap_empty():
 
 def test_wrap_short_text_is_one_line():
     assert _wrap("hello  world", 76) == ["hello world"]
+
+
+def test_wrap_overlong_first_word_has_no_blank_line():
+    url = "https://example.com/" + "x" * 90
+    assert _wrap(url + " tail", 76) == [url, "tail"]

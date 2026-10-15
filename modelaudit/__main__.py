@@ -109,7 +109,7 @@ def main(argv=None):
 def _wrap(text, width):
     out, line = [], ""
     for word in text.split():
-        if len(line) + len(word) + 1 > width:
+        if line and len(line) + len(word) + 1 > width:
             out.append(line)
             line = word
         else:
