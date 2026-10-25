@@ -20,8 +20,11 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python: ["3.10", "3.11", "3.12", "3.13"]
         include:
+          # ubuntu-latest (26.04) has no Python 3.9 build; 24.04 still does.
+          - os: ubuntu-24.04
+            python: "3.9"
           # The README says Python 3.8+. 3.8 is end-of-life, so it runs on the
           # older runner image that setup-python still has builds for.
           - os: ubuntu-22.04
