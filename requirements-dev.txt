@@ -1,2 +1,2 @@
 # Test-only. modelaudit itself has no dependencies.
-pytest==8.3.3
+pytest==9.1.1
